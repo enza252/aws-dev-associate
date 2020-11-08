@@ -2,7 +2,7 @@
 
 ## Scalability and High Availability
 
-Scalability means that an applicationb can handle greater loads by adapting
+Scalability means that an application can handle greater loads by adapting
 
 Two kinds of scalability
 - Vertical scalability
@@ -16,7 +16,7 @@ Increases the size of the instance running the application, adding more resource
 
 Example: application runs on t2.micro and want to run on a t2.large.
 
-Standard for non-distributed systems like databases. RDS and ElastiCache services  can be scaled vertically by changing isntance type.
+Standard for non-distributed systems like databases. RDS and ElastiCache services can be scaled vertically by changing instance type.
 
 ### Horizontal Scalability
 
@@ -72,7 +72,7 @@ If the response is not 200 OK, the instance is marked as 'unhealthy'.
 
 ### AWS Load Balancers (ELBs)
 
-Must know this for the exam
+Must know these for the exam
 
 Classic Load Balancer (V1)
 
@@ -143,7 +143,7 @@ ALB supports Routing, via routing tables to point to target groups
 - Based on hostname in URL e.g. one.example.com
 - Based on query strings and headers, e.g. example.com/users?id=2131321
 
-ALBs are a great fit for micro-serve architectures and container based applications (e.g. Docker, Amazon ECS)
+ALBs are a great fit for micro-service architectures and container based applications (e.g. Docker, Amazon ECS)
 
 ALBs have a port mapping feature to redirect to a dynamic port in ECS
 
@@ -165,7 +165,8 @@ ALBs have a fixed hostname (static DNS)
 
 Application servers don't see the IP of the client directly
 - The true IP of the client is inserted in the header `X-Forwarded-For`
-- We also get the port `X-Forwarded-Port` and proto `X-Forwarded-Proto`
+- We also get the port `X-Forwarded-Port` 
+- and Protocol `X-Forwarded-Proto` - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Proto
 
 Network Load Balancers expose a public, static IP.
 
@@ -360,10 +361,11 @@ ASGs can terminate instances marked as unhealthy by a load balancer.
 3 Kinds of policies:
 
 Target Tracking Scaling
-- Simple and easy to set up
-- Example 1: I want average ASG CPU to stay around 40%. If CPU usage exceeds 40% then we scale out, if below 40%, scale in.
+- With target tracking scaling policies, you select a scaling metric and set a target value.
+- Example: I want average ASG CPU to stay around 40%. If CPU usage exceeds 40% then we scale out, if below 40%, scale in.
 
 Simple/Step Scaling
+- With step scaling and simple scaling, you choose scaling metrics and threshold values for the CloudWatch alarms that trigger the scaling process.
 - Based on CloudWatch alarm triggers
 - More granular control of what to do when the limit is reached
 - When a CloudWatch alarm is triggered (e.g. average CPU of the group exceeds 70%), then specify number of units to add
@@ -381,9 +383,8 @@ In addition to default cooldown for ASG, we can create cooldowns that apply to a
 
 One common use for scaling-specific cooldowns is with a scale-in policy - a policy that terminates instances based on a specific criteria or metric.
 
-Since this policy terminates instances, EC2 Auto Scaling needs less time to deteremine whether to terminate additional instances.
+Since this policy terminates instances, EC2 Auto Scaling needs less time to determine whether to terminate additional instances.
 
-If the default cooldown period of 300 seconds is to long, you can reduce costs by applying a scaling-specific cooldown period of 180 seconds to the scale in policy.
+If the default cooldown period of 300 seconds is too long, you can reduce costs by applying a scaling-specific cooldown period of 180 seconds to the scale in policy.
 
-If your application is scaling up and down multiple times each hour, modify the Auto Scaling Groups cool-down timers and the CloudWatch Alarm Period that triggers the scale in.
-
+If your application is scaling up and down multiple times each hour, modify the Auto Scaling Groups cool-down timers and the CloudWatch Alarm Period that triggers the scale in. This is a big sign that your policies may not be appropriate
